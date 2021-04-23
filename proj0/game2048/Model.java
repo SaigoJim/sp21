@@ -113,39 +113,42 @@ public class Model extends Observable {
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+        board.setViewingPerspective(side);
         for (int c = 0; c < board.size(); c += 1) {
-            score += moveCol(c);
-            changed = true;
-
+            if (moveCol(c)) {
+                changed = true;
+            }
         }
-
+        board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
             setChanged();
         }
+
         return changed;
     }
 
-    // Make the whole column move
-    private int moveCol(int col) {
-        int scoreIncrement = 0;
+    // Make the whole column move and Return Whether moved
+    private boolean moveCol(int col) {
         boolean hasMerged = false;
+        boolean moved = false;
         for (int row = 2; row >= 0; row -= 1) {
             Tile t = board.tile(col, row);
             if (t != null) {
                 int pos = findPositionRow(col, row, hasMerged);
                 if (pos != row) {
                     if (board.move(col, pos, t)) {
-                        scoreIncrement += (t.value() * 2);
+                        score += (t.value() * 2);
                         hasMerged = true;
                     }
                     else {
                         hasMerged = false;
                     }
+                    moved = true;
                 }
             }
         }
-        return scoreIncrement;
+        return moved;
     }
 
     // Find the destination Row where current tile will move to
