@@ -1,8 +1,8 @@
 package game2048;
 
-import ucb.util.CommandArgs;
-
 import java.util.Random;
+
+import ucb.util.CommandArgs;
 
 /** The main class for the 2048 game.
  *  @author P. N. Hilfinger
