@@ -176,8 +176,44 @@ public class Model extends Observable {
      */
     public static boolean atLeastOneMoveExists(Board b) {
         // TODO: Fill in this function.
+        // Situation One: There is at least one empty space on the board.
+        if (emptySpaceExists(b)) {
+            return true;
+        }
+        // Situation Two: There are two adjacent tiles with the same value.
+        // 1.For each Row, get two adjacent tiles
+        // 2.Check them, return true if they have the same value
+        // 3.Apply 1-2 to each column
+        int size = b.size();
+        for (int i = 0; i < size; i += 1) {
+            for (int j = 0; j < size - 1; j += 1) {
+                if ((b.tile(j, i) == null || b.tile(j + 1, i) == null)
+                        && (b.tile(i, j) == null || b.tile(i, j + 1) == null)) {
+                    continue;
+                }
+                if (b.tile(j, i).value() == b.tile(j + 1, i).value()) {
+                    return true;
+                }
+                if (b.tile(i, j).value() == b.tile(i, j + 1).value()) {
+                    return true;
+                }
+            }
+        }
+
+        /*for (int i = 0; i < size; i += 1) {
+            for (int j = 0; j < size - 1; j += 1) {
+                if (b.tile(i, j) == null || b.tile(i, j + 1) == null) {
+                    continue;
+                }
+                if (b.tile(i, j).value() == b.tile(i, j + 1).value()) {
+                    return true;
+                }
+            }
+        }*/
         return false;
     }
+
+
 
 
     @Override
