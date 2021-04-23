@@ -113,6 +113,11 @@ public class Model extends Observable {
         // TODO: Modify this.board (and perhaps this.score) to account
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
+        for (int c = 0; c < board.size(); c += 1) {
+            score += moveCol(c);
+            changed = true;
+
+        }
 
         checkGameOver();
         if (changed) {
@@ -120,6 +125,45 @@ public class Model extends Observable {
         }
         return changed;
     }
+
+    // Make the whole column move
+    private int moveCol(int col) {
+        int scoreIncrement = 0;
+        boolean hasMerged = false;
+        for (int row = 2; row >= 0; row -= 1) {
+            Tile t = board.tile(col, row);
+            if (t != null) {
+                int pos = findPositionRow(col, row, hasMerged);
+                if (pos != row) {
+                    if (board.move(col, pos, t)) {
+                        scoreIncrement += (t.value() * 2);
+                        hasMerged = true;
+                    }
+                    else {
+                        hasMerged = false;
+                    }
+                }
+            }
+        }
+        return scoreIncrement;
+    }
+
+    // Find the destination Row where current tile will move to
+    // 如果前面没人，返回最高
+    // 如果前面有人A，且不相等，返回A的下一层
+    // 如果前面有人A，且相等，返回A的层数
+    private int findPositionRow(int col, int row, boolean preMerged) {
+        for (int r = row + 1; r < board.size(); r += 1) {
+            if (board.tile(col, r) != null) {
+                if (board.tile(col, r).value() == board.tile(col, row).value() && !preMerged) {
+                    return r;
+                }
+                return r - 1;
+            }
+        }
+        return board.size() - 1;
+    }
+
 
     /** Checks if the game is over and sets the gameOver variable
      *  appropriately.
@@ -199,17 +243,6 @@ public class Model extends Observable {
                 }
             }
         }
-
-        /*for (int i = 0; i < size; i += 1) {
-            for (int j = 0; j < size - 1; j += 1) {
-                if (b.tile(i, j) == null || b.tile(i, j + 1) == null) {
-                    continue;
-                }
-                if (b.tile(i, j).value() == b.tile(i, j + 1).value()) {
-                    return true;
-                }
-            }
-        }*/
         return false;
     }
 
