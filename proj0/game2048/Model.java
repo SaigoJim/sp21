@@ -116,12 +116,14 @@ public class Model extends Observable {
         board.setViewingPerspective(side);
 
         for (int c = 0; c < board.size(); c += 1) {
+            // Deal with each column
             if (moveCol(c)) {
                 changed = true;
             }
         }
-        
+
         board.setViewingPerspective(Side.NORTH);
+        
         checkGameOver();
         if (changed) {
             setChanged();
