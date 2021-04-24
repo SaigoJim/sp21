@@ -114,11 +114,13 @@ public class Model extends Observable {
         // for the tilt to the Side SIDE. If the board changed, set the
         // changed local variable to true.
         board.setViewingPerspective(side);
+
         for (int c = 0; c < board.size(); c += 1) {
             if (moveCol(c)) {
                 changed = true;
             }
         }
+        
         board.setViewingPerspective(Side.NORTH);
         checkGameOver();
         if (changed) {
@@ -130,12 +132,16 @@ public class Model extends Observable {
 
     // Make the whole column move and Return Whether moved
     private boolean moveCol(int col) {
+        // Mark previous one whether has merged
         boolean hasMerged = false;
+        // Record the change state
         boolean moved = false;
+        // Iterate from the top second row
         for (int row = 2; row >= 0; row -= 1) {
             Tile t = board.tile(col, row);
             if (t != null) {
                 int pos = findPositionRow(col, row, hasMerged);
+                // When pos not equal to cur row, this tile will move
                 if (pos != row) {
                     if (board.move(col, pos, t)) {
                         score += (t.value() * 2);
@@ -144,6 +150,7 @@ public class Model extends Observable {
                     else {
                         hasMerged = false;
                     }
+                    // Change the state
                     moved = true;
                 }
             }
@@ -154,13 +161,18 @@ public class Model extends Observable {
     // Find the destination Row where current tile will move to
     // 如果前面没人，返回最高
     // 如果前面有人A，且不相等，返回A的下一层
-    // 如果前面有人A，且相等，返回A的层数
+    // 如果前面有人A，且相等，如果是已经merged，返回A的下一层
+    // 如果前面有人A，且相等，如果没有merged，返回A的层数
     private int findPositionRow(int col, int row, boolean preMerged) {
+        // Iterate from (curRow + 1) row
         for (int r = row + 1; r < board.size(); r += 1) {
+            // Find a non-empty space!
             if (board.tile(col, r) != null) {
+                // Found tile has the same value and has not merged before, Return this tile'row
                 if (board.tile(col, r).value() == board.tile(col, row).value() && !preMerged) {
                     return r;
                 }
+                // Otherwise return next level
                 return r - 1;
             }
         }
@@ -188,6 +200,7 @@ public class Model extends Observable {
         int size = b.size();
         for (int i = 0; i < size; i += 1) {
             for (int j = 0; j < size; j += 1) {
+                // Condition: empty space
                 if (b.tile(j, i) == null) {
                     return true;
                 }
@@ -207,6 +220,7 @@ public class Model extends Observable {
         for (int i = 0; i < size; i += 1) {
             for (int j = 0; j < size; j += 1) {
                 Tile curTile = b.tile(j, i);
+                // Condition: MAX Tile
                 if (curTile != null && curTile.value() == MAX_PIECE) {
                     return true;
                 }
@@ -234,6 +248,8 @@ public class Model extends Observable {
         int size = b.size();
         for (int i = 0; i < size; i += 1) {
             for (int j = 0; j < size - 1; j += 1) {
+                // For i row j column i row j+1 column
+                // For i column j row i column j+1 row
                 if ((b.tile(j, i) == null || b.tile(j + 1, i) == null)
                         && (b.tile(i, j) == null || b.tile(i, j + 1) == null)) {
                     continue;
