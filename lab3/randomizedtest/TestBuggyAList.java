@@ -22,20 +22,15 @@ public class TestBuggyAList {
                 int randVal = StdRandom.uniform(0, 100);
                 L.addLast(randVal);
                 B.addLast(randVal);
-                System.out.println("addLast(" + randVal + ")");
             } else if (operationNumber == 1) {
                 // size
                 int sizeL = L.size();
                 int sizeB = B.size();
                 assertEquals(sizeL, sizeB);
-                System.out.println("sizeL: " + sizeL);
-                System.out.println("sizeB: " + sizeB);
             } else if (L.size() != 0 && operationNumber == 2) {
                 int lastL = L.removeLast();
                 int lastB = B.removeLast();
                 assertEquals(lastL,lastB);
-                System.out.println("removed lastL: " + lastL);
-                System.out.println("removed lastB: " + lastB);
             }
         }
     }
