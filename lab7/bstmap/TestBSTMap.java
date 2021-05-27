@@ -27,6 +27,11 @@ public class TestBSTMap {
             //make sure put is working via containsKey and get
             assertTrue( null != b.get("hi" + i) && (b.get("hi"+i).equals(1+i))
                         && b.containsKey("hi" + i));
+            /*Integer message = b.get("hi" + i);
+            System.out.println(message);
+            assertTrue(null != b.get("hi" + i));
+            assertTrue(b.get("hi"+i).equals(1+i));
+            assertTrue(b.containsKey("hi" + i));*/
         }
         assertEquals(455, b.size());
         b.clear();
